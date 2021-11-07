@@ -1,11 +1,9 @@
 package com.runningcherry.test
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DividerItemDecoration
 
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,21 +17,18 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView : RecyclerView
-    private lateinit var toolbar : Toolbar
-    private var adapter = MyAdapter()
+    private var adapter = MyAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        getSeries()
-        toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
         recyclerView = findViewById (R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        getSeries()
         val itemDecoration = DividerItemDecoration (this, DividerItemDecoration.VERTICAL)
         itemDecoration.setDrawable(getDrawable(R.drawable.divider)!!)
-        recyclerView.addItemDecoration(itemDecoration)
+//        recyclerView.addItemDecoration(itemDecoration)
         getSeries()
     }
 
@@ -54,18 +49,10 @@ class MainActivity : AppCompatActivity() {
          })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_toolbar, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.add) {
-//            adapter.addItem()
-        } else {
-            Log.e ("kek", "gay")
-        }
-        return super.onOptionsItemSelected(item)
+    fun onClickItem (item : SeriesItem) {
+//        Log.e ("kek", "from activity ${item.toString()}")
+        val intent = Intent (this, EpisodeActivity::class.java).apply { putExtra("SeriesItem", item) }
+        startActivity(intent)
     }
 }
 
